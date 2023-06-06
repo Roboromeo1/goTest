@@ -1,0 +1,13 @@
+
+1. Race condition in the goroutine launched in the main function: There's a point in the main function where a bunch of tiny operations called goroutines are launched. These are running simultaneously, which usually speeds things up, but there's a problem. They're all trying to change the value of the variable `i` at the same time. This leads to a "race" to change `i` and we can't predict which goroutine will "win" that race. So, we end up with unpredictable results, which we don't want. To fix this, we can give each goroutine its own personal copy of `i`, so they aren't fighting over the same variable.
+
+2. Closing `jobs` channel prematurely: We're telling the program to stop accepting new jobs before we've actually finished creating all the jobs, which causes a crash. It's like closing the doors to a concert venue before all the audience members have arrived. We need to make sure all the jobs are created and then close the channel.
+
+
+4. Incorrect use of switch statement and assignment to `j` in the `worker` function: We've got a switch statement in the worker function that doesn't seem to be doing what we want. It's trying to do some multiplication on `j`, but it's happening in the wrong order and in the wrong places. This is creating confusion and not giving us the results we want. We need to refactor this part to make sure each case is handled correctly and our math operations are applied in the right order.
+
+5. The `i=i+1` operation in `for i, w := range jobs2` loop: There's a part where we're trying to add 1 to `i` inside a loop, but this doesn't actually do anything. It's like trying to turn up the volume on a TV that's not plugged in. We can just remove this part because it's not needed.
+
+6. `results` channel is closed prematurely: Similar to the `jobs` channel, we're closing the `results` channel before we're actually done with it. This could also cause a crash. We should only close this channel once we've finished all the jobs.
+
+7. Potential deadlock when trying to read from `results`: Lastly, we're trying to read the results from the workers before they're actually done. This is like trying to read a book that hasn't been written yet. We end up waiting forever for the results, which causes a deadlock. We need to make sure all the jobs are done before we try to read the results. 
